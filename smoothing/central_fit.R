@@ -3,7 +3,7 @@ library(tidyverse)
 # knot_iterate <- function(x, y, knots) etc.
 # eval_knots
 
-# set up params; initial knots are user-defined and may require some tinkering with
+# set up params; initial knots are user-defined and may require some tweaking ("some" may be an understatement--good luck!)
 min_age <- 3
 max_age <- 102
 initial_knots_M <- c(10, 20, 30)
