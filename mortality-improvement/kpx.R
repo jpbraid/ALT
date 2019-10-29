@@ -9,7 +9,7 @@ names(kpx) <- 1:nrow(px_data)
 for(i in 1:nrow(px_data)) {
   kpx[[i]] <- rbind(1, cumprod(px_data[i:nrow(px_data), ]))
 }
-# kpx[[i]] = {k_p_(i-1)} for k = 0, 1, ... 
+# note that kpx[[i]] tells us {k_p_(i-1)} for k = 0, 1, ... 
 
 # now calculate k|q_x = kpx*q_k
 k_bar_qx <- vector(mode = "list", length = nrow(px_data))
