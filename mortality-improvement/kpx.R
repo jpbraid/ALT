@@ -13,7 +13,7 @@ names(kpx) <- 1:nrow(px_data)
 for(i in 1:nrow(px_data)) {
   kpx[[i]] <- rbind(1, cumprod(px_data[i:nrow(px_data), ]))
 }
-# note that kpx[[i]] tells us {k_p_(i-1)} for k = 0, 1, ... 
+# note that kpx[[i]] tells us {k_p_(i-1)} for k = 0, 1, ... (row i corresponds to age i - 1)
 
 # now calculate k|q_x = kpx*q_k
 k_bar_qx <- vector(mode = "list", length = nrow(px_data))
@@ -28,7 +28,6 @@ for (i in 2:nrow(px_data)) {
 e_0 <- apply(k_bar_qx[[1]] * (0:max_age), 2, sum) + 0.5
 e_65 <- apply(k_bar_qx[[66]] * (65:max_age), 2, sum) + 0.5
 # NOTE: to calculate e_x for early life tables we'll need to manually impute the missing qx's for old ages (cf. the notes)
-# 120 <===> max_age (<- max(qx_data$age))
 
 # plot the distribution of K_0 and K_65 for various calendar years
 # (to be continued)
