@@ -34,17 +34,16 @@ all_years <- seq(from = min(years_in_data), to = max(years_in_data))
 qx_all <- as.data.frame(matrix(nrow = nrow(qx_data), ncol = length(all_years)))
 names(qx_all) <- as.character(all_years)
 
-for (i in as.character(all_years)) {
-  if (i %in% as.character(years_in_data)) qx_all[, i] <- qx_data[, i]
-  else {
-    # find the nearest two years in the data, call them j and k
-    # lol at the type conversion here
-    j <- max(which(years_in_data < i))
-    k <- min(which(years_in_data > i))
-    print(j)
-    print(k)
-    #qx_all[, i] <- qx_all[, i - 1]  - (qx_all[, j] - qx_all[, k])/(k - j + 1)
-  }
+# now i want to: (1) put the data that already exists into qx_all
+for (i in all_years) {
+  if (i %in% years_in_data) qx_all[, as.character(i)] <- qx_data[, as.character(i)]
 }
 
-# this is a MESS
+# and then (2) interpolate the rest of the data
+for (i in all_years) {
+  if (!(i %in% years_in_data)) {
+    j <- max(years_in_data[years_in_data < i])
+    k <- min(years_in_data[years_in_data > i])
+    qx_all[, as.character(i)] <- qx_all[, as.character(i - 1)]  - (qx_all[, as.character(j)] - qx_all[, as.character(k)])/(k - j)
+  }
+}
