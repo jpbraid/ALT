@@ -37,3 +37,6 @@ for (j in na_columns) {
   qx_all[nrow(qx_all), j] <- 1
 }
 
+age <- 0:(nrow(qx_all) - 1)
+qx_all <- cbind(age, qx_all)
+write.csv(qx_all, "qx_all_interpolated_M.csv", row.names = F)
