@@ -1,7 +1,7 @@
 library(tidyverse)
 
 qx_data <- read_csv("qx_all_M.csv") %>% select(-age) # maybe sort by age first
-px_data <- 1 - qx_data # note row i corresponds to age i - 1
+px_data <- 1 - qx_data
 
 # calculate the survival probabilities kpx for each life table
 kpx <- vector(mode = "list", length = nrow(px_data))
