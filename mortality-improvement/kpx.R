@@ -24,6 +24,7 @@ for (i in 2:nrow(px_data)) {
 # (k|q_x is good to know, because it tells us the distribution (pmf) of K_x)
 e_0 <- apply(k_bar_qx[[1]] * (0:120), 2, sum) + 0.5
 e_65 <- apply(k_bar_qx[[66]] * (65:120), 2, sum) + 0.5
+# NOTE: to calculate e_x for early life tables we'll need to manually impute the missing qx's for old ages (cf. the notes)
 
 # plot the distribution of K_0 and K_65 for various calendar years
 # (to be continued)
