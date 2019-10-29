@@ -12,7 +12,7 @@ for (i in all_years) {
   if (i %in% years_in_data) qx_all[, as.character(i)] <- qx_data[, as.character(i)]
 }
 
-# and then (2) interpolate the rest of the data
+# then (2) interpolate the rest of the data
 for (i in all_years) {
   if (!(i %in% years_in_data)) {
     j <- max(years_in_data[years_in_data < i])
@@ -21,7 +21,7 @@ for (i in all_years) {
   }
 }
 
-# i guess i should combine these two for loops into an if-else loop
+# maybe i should combine these two for loops into an if-else loop
 # then again, that would involve constantly reassigning values to the same column!!
 
 #finally let's fill in / interpolate the NA's (as it stands, all the NA's are in a block of high ages and early life tables
