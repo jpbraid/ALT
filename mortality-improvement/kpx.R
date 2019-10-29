@@ -1,5 +1,6 @@
 library(tidyverse)
 
+# load in qx data from all life tables and calculate corresponding px's
 qx_data <- read_csv("qx_all_M.csv") %>% select(-age) # maybe sort by age first
 px_data <- 1 - qx_data
 
