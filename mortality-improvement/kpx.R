@@ -1,19 +1,18 @@
 library(tidyverse)
 
 # load in qx data from all life tables and calculate corresponding px's
-qx_data <- read_csv("qx_all_interpolated_M.csv") 
-# maybe sort this by age
+qx_data <- read_csv("qx_all_interpolated_M.csv") # maybe sort this by age
 max_age <- max(qx_data$age)
 qx_data <- qx_data %>% select(-age)
 px_data <- 1 - qx_data
 
 # calculate the survival probabilities kpx for each life table
+# note that kpx[[i]] tells us {k_p_(i-1)} for k = 0, 1, ... (row i corresponds to age i - 1)
 kpx <- vector(mode = "list", length = nrow(px_data))
 names(kpx) <- 1:nrow(px_data)
 for(i in 1:nrow(px_data)) {
   kpx[[i]] <- rbind(1, cumprod(px_data[i:nrow(px_data), ]))
 }
-# note that kpx[[i]] tells us {k_p_(i-1)} for k = 0, 1, ... (row i corresponds to age i - 1)
 
 # now calculate k|q_x = kpx*q_k
 k_bar_qx <- vector(mode = "list", length = nrow(px_data))
