@@ -28,25 +28,25 @@ for (gender in c("M", "F")) {
     gather(key = "year", value = "q_x", -age) # data %>% pivot_longer(-age, names_to = "year", values_to = "q_x")
   data$year <- as.numeric(data$year)
 
-  fit_data <- tibble(age = NA, range = NA, MI = NA, poly_degree = NA, CV_1 = NA, CV_2 = NA) # adj_R_squared
+  fit_data <- tibble(age = NA, range = NA, MI = NA, poly_degree = NA, adj_R_squared = NA) # adj_R_squared
 
   for (ages in 0:100) {
     for (range in names(ranges)) {
       for (deg in 2:5) {
-         if (range == "25" & deg == 5) break
+         if (range == "25" & deg == 5) next
          else {
            fit <- data %>% filter(age == ages & year %in% ranges[[range]]) %>% 
-           with(glm(q_x ~ poly(year, deg))) # encode year as like 0, 1, 2...?
-           #adj_R_squared <- summary(fit)$adj.r.squared
+           with(lm(q_x ~ poly(year, deg))) # encode year as like 0, 1, 2...?
+           adj_R_squared <- summary(fit)$adj.r.squared
            #AIC <- fit$aic
-           set.seed(1)
-           CV <- boot::cv.glm(data %>% filter(age == ages & year %in% ranges[[range]]), fit, K = 5)$delta
+           #set.seed(1)
+           #CV <- boot::cv.glm(data %>% filter(age == ages & year %in% ranges[[range]]), fit, K = 5)$delta
            predicted_qx <- predict(fit)
-           MI <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 # blah = range
-           # get the crude MI's as well!!
+           MI_fit <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 # blah = range
+           #MI_crude <- qx[blah]/qx[bleh]^(1/length(range))-1
            if (is.na(MI)) next
            else {
-            new_row <- c(ages, range, MI, deg, CV[1], CV[2])
+            new_row <- c(ages, range, MI, deg, adj_R_squared)
             fit_data <- rbind(fit_data, new_row)
            }
         }
@@ -58,9 +58,9 @@ for (gender in c("M", "F")) {
   write.csv(fit_data, sprintf("MI_fits_%s.csv", gender), row.names = F)
   
   # what are our final smoothed MI's for each range?
-  for (rng in names(ranges)) {
-    best_MI <- fit_data %>% filter(range == rng) %>% group_by(age) %>% filter(CV_2 == min(CV_2))
-    write.csv(best_MI, sprintf("best_MI_fit_%s_%s.csv", gender, rng), row.names = F)
+  for (raaange in names(ranges)) {
+    best_MI <- fit_data %>% filter(range == raaange) %>% group_by(age) %>% filter(adj_R_squared == max(adj_R_squared)
+    write.csv(best_MI, sprintf("best_MI_fit_%s_%s.csv", gender, raaange), row.names = F)
   }
 }
 
