@@ -1,8 +1,7 @@
 library(tidyverse)
 
-# the idea here is you choose the gender and range and try different values of df until you find a fit that "looks" good
+# the idea here is you choose the gender and range and try different values of dof until you find a fit that "looks" good
 # can't say too much more than that really
-# the user has to eyeball the plots and choose df based on the general appearance, so it's hard to automate any of this
 
 gender <- "M"
 range <- "short"
