@@ -14,7 +14,9 @@ for(i in 1:nrow(px_data)) {
   kpx[[i]] <- rbind(1, cumprod(px_data[i:nrow(px_data), ]))
 }
 
-# now calculate k|q_x = kpx*q_k
+### WARNING: the below may be incorrect! needs checking
+
+# now calculate k|q_x = kpx*q_{x+k}
 k_bar_qx <- vector(mode = "list", length = nrow(px_data))
 k_bar_qx[[1]] <- kpx[[1]][-nrow(kpx[[1]]), ]*qx_data
 for (i in 2:nrow(px_data)) {
@@ -22,10 +24,10 @@ for (i in 2:nrow(px_data)) {
 }
 
 # knowing k|q_x we can calculate the curtate future lifetime at various ages
-#(actually we can also use the kpx's for that, using a little probability trick, BUT...)
+#(actually we can also use the kpx's for that, BUT...)
 e_0 <- apply(k_bar_qx[[1]] * (0:max_age), 2, sum) + 0.5
 e_65 <- apply(k_bar_qx[[66]] * (65:max_age), 2, sum) + 0.5
-# NOTE: to calculate e_x for early life tables we'll need to manually impute the missing qx's for old ages (cf. the notes)
+
 
 # plot the distribution of K_0 and K_65 for various calendar years
 # (to be continued)
