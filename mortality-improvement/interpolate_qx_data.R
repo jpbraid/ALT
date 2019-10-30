@@ -22,9 +22,6 @@ for (i in all_years) {
   }
 }
 
-# maybe i should combine these two for loops into an if-else loop
-# then again, that would involve constantly reassigning values to the same column!!
-
 #finally let's fill in / interpolate the NA's (as it stands, all the NA's are in a block of high ages and early life tables
 # if we get new NA's in a different spot, the below code will break things; so i need to add some kind of check (if j < 100 or ... etc.)
 na_columns <- vector()
