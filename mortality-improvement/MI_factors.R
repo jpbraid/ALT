@@ -47,6 +47,7 @@ for (genders in c("M", "F")) {
            #AIC <- fit$aic
            #set.seed(1)
            #CV <- boot::cv.glm(data %>% filter(age == ages & year %in% ranges[[range]]), fit, K = 5)$delta
+           #h <- lm.influence(fit)$h; then calculate CV = (yi - y-hati)^2/(1 - h_i)
            predicted_qx <- predict(fit)
            MI_fitted <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 
            # need to do max(ranges[[range]]) - min
