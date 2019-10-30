@@ -1,9 +1,10 @@
-# SORT DATAFRAMES BY COLUMN FIRST! (safety)
-qx_data <- read_csv("qx_all_M.csv") %>% select(-age)
+# read in the qx data from life tables
+qx_data <- read_csv("qx_all_M.csv") %>% select(-age) # SORT BY COLUMN
 years_in_data <- qx_data %>% names() %>% as.numeric %>% sort()
 all_years <- seq(from = min(years_in_data), to = max(years_in_data))
 
-# lmk if there's a better way to do the below
+# initialise empty data.frame to contain interpolated qx data
+# (is there a better way to do this?)
 qx_all <- as.data.frame(matrix(nrow = nrow(qx_data), ncol = length(all_years)))
 names(qx_all) <- as.character(all_years)
 
