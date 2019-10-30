@@ -2,51 +2,58 @@ library(tidyverse)
 library(boot)
 
 ############################################################################################################
-##years_short <- 26
-##years_medium <- 100
-##years_long <- 125
-##year_ranges <- c(1885, 1895, 1905, 1921, 1933, 1947, 1954, 1961, 1966,
-##                 1971, 1976, 1981, 1986, 1991, 1996, 2001, 2006, 2011, 2016, 2021)
-##data <- read_csv("S:/Agencies/ALT/ALT/ALT2015-17/jesse/4_mortality_improvement/qx_all_M.csv")
-##year_max <- max(year_ranges)
-##range_short <- year_ranges[year_max - year_ranges <= 26]
-##years_short_actual <- max(range_short) - min(range_short)
 ############################################################################################################
 
-range_25 <- seq(from = 1991, to = 2016, by = 5)
-range_110 <- c(1905, 1921, 1933, 1947, 1954, 1961, 1966, 1971,
-          1976, 1981, 1986, 1991, 1996, 2001, 2006, 2011, 2016)
-range_125 <- c(1890, 1905, 1921, 1933, 1947, 1954, 1961, 1966,
-           1971, 1976, 1981, 1986, 1991, 1996, 2001, 2006, 2011, 2016)
-ranges <- list(`25` = range_25, `110` = range_110, `125` = range_125)
+# set up initial params and lengths (in years) of the ranges over which to analyse mortality improvement
+max_age <- 100
+min_degree <- 2
+max_degree <- 5
+range_length_short <- 25
+range_length_medium <- 100
+range_length_long <- 125
 
-for (gender in c("M", "F")) {
-  file <- sprintf("qx_all_%s.csv", gender)
-  data <- read_csv(file)
-  data <- data %>% mutate(`1890` = (`1885` + `1895`)/2) %>% 
+############################################################################################################
+############################################################################################################
+
+# find the years for which life table data exists and create ranges based on above params
+qx_data <- read_csv("qx_all.csv")
+years_in_data <- sort(as.numeric(names(data))) # this should drop the NA's
+max_year <- max(years_in_data)
+range_short <- years_in_data[max_year - years_in_data <= range_length_short]
+range_medium <- years_in_data[max_year - years_in_data <= range_length_medium]
+range_long <- years_in_data[max_year - years_in_data <= range_length_long]
+ranges <- list(short = range_short, medium = range_medium, long = range_long)
+
+# the entire analysis is identical for each gender, so we loop over genders
+for (genders in c("M", "F")) {
+  qx_data <- qx_data %>% filter(gender = genders) # data <- read_csv(sprintf("qx_all_%s.csv", gender))
+  qx_data <- qx_data %>% mutate(`1890` = (`1885` + `1895`)/2) %>% 
     select(-c(`1885`, `1895`)) %>% select(age, `1890`, everything()) %>% 
     gather(key = "year", value = "q_x", -age) # data %>% pivot_longer(-age, names_to = "year", values_to = "q_x")
-  data$year <- as.numeric(data$year)
+  qx_data$year <- as.numeric(qx_data$year)
 
-  fit_data <- tibble(age = NA, range = NA, MI = NA, poly_degree = NA, adj_R_squared = NA) # adj_R_squared
-
-  for (ages in 0:100) {
+  fit_data <- tibble(age = NA, range = NA, MI_fitted = NA, poly_degree = NA, adj_R_squared = NA) # CV_1, CV_2
+  
+  # now fit polynomial models for qx against year, for each age and each range of years;   
+  # calculate MI factors based on predicted qx's from each fit        
+  for (ages in 0:max_age) {
     for (range in names(ranges)) {
-      for (deg in 2:5) {
-         if (range == "25" & deg == 5) next
+      for (deg in min_degree:max_degree) {
+         if (length(range) <= deg + 1) next # too few values for this fit
          else {
-           fit <- data %>% filter(age == ages & year %in% ranges[[range]]) %>% 
-           with(lm(q_x ~ poly(year, deg))) # encode year as like 0, 1, 2...?
+           fit <- qx_data %>% filter(age == ages & year %in% ranges[[range]]) %>% 
+           with(lm(q_x ~ poly(year, deg)))
            adj_R_squared <- summary(fit)$adj.r.squared
            #AIC <- fit$aic
            #set.seed(1)
            #CV <- boot::cv.glm(data %>% filter(age == ages & year %in% ranges[[range]]), fit, K = 5)$delta
            predicted_qx <- predict(fit)
-           MI_fit <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 # blah = range
+           MI_fitted <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 
+           # need to do max(ranges[[range]]) - min
            #MI_crude <- qx[blah]/qx[bleh]^(1/length(range))-1
-           if (is.na(MI)) next
+           if (is.na(MI_fitted)) next
            else {
-            new_row <- c(ages, range, MI, deg, adj_R_squared)
+            new_row <- c(ages, range, MI_fitted, deg, adj_R_squared)
             fit_data <- rbind(fit_data, new_row)
            }
         }
@@ -55,23 +62,21 @@ for (gender in c("M", "F")) {
   }
 
   fit_data <- fit_data %>% filter(complete.cases(fit_data)) # i don't want NA's
-  write.csv(fit_data, sprintf("MI_fits_%s.csv", gender), row.names = F)
+  write.csv(fit_data, sprintf("output/MI_fits_%s.csv", gender), row.names = F)
   
   # what are our final smoothed MI's for each range?
   for (raaange in names(ranges)) {
-    best_MI <- fit_data %>% filter(range == raaange) %>% group_by(age) %>% filter(adj_R_squared == max(adj_R_squared)
-    write.csv(best_MI, sprintf("best_MI_fit_%s_%s.csv", gender, raaange), row.names = F)
+    best_MI <- fit_data %>% filter(range == raaange) %>% group_by(age) %>% filter(adj_R_squared == max(adj_R_squared))
+    write.csv(best_MI, sprintf("output/best_MI_fit_%s_%s.csv", gender, raaange), row.names = F)
   }
 }
 
-# is adjusted R^2 the right thing to use here? maybe. is CV error better? not sure.
-
-# here's a funny bug: you can't do for (age in 1:105) { ... data %>% filter(age == age) ... }
-# i guess R gets confused when the iterate ("age") has the same name as the column ("age")
+# i'll just use adjusted R^2, since they did, but it's worth raising the possibility of looking at CV error etc.
+# Q: should we encode year as 0, 1, 2...?
 
 
 
-
+###################### BELOW IS THE EXPERIMENT ZONE; FOR JESSE'S EYES ONLY!!! ############################
 
 # 5 year plots
 MI_qx <- tibble(age = NA, gender = NA, range = NA, MI = NA)
@@ -100,7 +105,3 @@ MI_qx %>% filter(gender == "F", range <= 4) %>%
   mutate(range = paste0(as.character(2016 - 5*range), " to ", as.character(2016 - 5*(range - 1)))) %>% 
   ggplot(aes(x = age, y = MI, colour = as.factor(range))) + geom_line() + labs(colour = "range")
 ggsave("output/MI_qx_5_years_F.png")
-
-
-
-
