@@ -24,7 +24,10 @@ for (i in 2:nrow(px_data)) {
 # knowing k|q_x we can calculate the curtate future lifetime at various ages
 #(actually we can also use the kpx's for that, BUT...)
 e_0 <- apply(k_bar_qx[[1]] * (0:max_age), 2, sum) + 0.5
-e_65 <- apply(k_bar_qx[[66]] * (65:max_age), 2, sum) + 0.5
+e_65 <- apply(k_bar_qx[[66]] * (65:max_age), 2, sum) + 0.5 # max_age + 1 ??? i think so
+# more correct would be e_x <- apply(k_bar_qx[[x]] * (0:blah), 2, sum) + 0.5
+# or just do e_x <- sum(kpx[[x]])
+
 
 ### WARNING: the above only works for years < 1996 or ages < 100 (inclusive or)
 ### basically, that's because sum kpx q_{x+k} does NOT equal 1 for old x
