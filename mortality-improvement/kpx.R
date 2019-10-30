@@ -14,8 +14,6 @@ for(i in 1:nrow(px_data)) {
   kpx[[i]] <- rbind(1, cumprod(px_data[i:nrow(px_data), ]))
 }
 
-### WARNING: the below may be incorrect! needs checking
-
 # now calculate k|q_x = kpx*q_{x+k}
 k_bar_qx <- vector(mode = "list", length = nrow(px_data))
 k_bar_qx[[1]] <- kpx[[1]][-nrow(kpx[[1]]), ]*qx_data
@@ -27,6 +25,11 @@ for (i in 2:nrow(px_data)) {
 #(actually we can also use the kpx's for that, BUT...)
 e_0 <- apply(k_bar_qx[[1]] * (0:max_age), 2, sum) + 0.5
 e_65 <- apply(k_bar_qx[[66]] * (65:max_age), 2, sum) + 0.5
+
+### WARNING: the above only works for years < 1996 or ages < 100 (inclusive or)
+### basically, that's because sum kpx q_{x+k} does NOT equal 1 for old x
+### (technically, it *never* equals 1, even for young x, because the recent life tables don't have a final age with q_x = 1;
+### nonetheless, it gets pretty damn close for x < 100)
 
 
 # plot the distribution of K_0 and K_65 for various calendar years
