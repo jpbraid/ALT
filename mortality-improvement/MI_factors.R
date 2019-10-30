@@ -47,7 +47,7 @@ for (genders in c("M", "F")) {
            #AIC <- fit$aic
            #set.seed(1)
            #CV <- boot::cv.glm(data %>% filter(age == ages & year %in% ranges[[range]]), fit, K = 5)$delta
-           #h <- lm.influence(fit)$h; then calculate CV = (yi - y-hati)^2/(1 - h_i)
+           #OR do h <- lm.influence(fit)$h, then calculate CV = (yi - y-hati)^2/(1 - h_i)
            predicted_qx <- predict(fit)
            MI_fitted <- (predicted_qx[length(ranges[[range]])]/predicted_qx[1])^(1/as.numeric(range)) - 1 
            # need to do max(ranges[[range]]) - min
@@ -66,10 +66,12 @@ for (genders in c("M", "F")) {
   write.csv(fit_data, sprintf("output/MI_fits_%s.csv", gender), row.names = F)
   
   # what are our final smoothed MI's for each range?
-  for (raaange in names(ranges)) {
-    best_MI <- fit_data %>% filter(range == raaange) %>% group_by(age) %>% filter(adj_R_squared == max(adj_R_squared))
-    write.csv(best_MI, sprintf("output/best_MI_fit_%s_%s.csv", gender, raaange), row.names = F)
-  }
+  #for (raaange in names(ranges)) {
+   #best_MI <- fit_data %>% filter(range == raaange) %>% group_by(age) %>% filter(adj_R_squared == max(adj_R_squared))
+   #write.csv(best_MI, sprintf("output/best_MI_fit_%s_%s.csv", gender, raaange), row.names = F)
+   # better: just find that polynomial degree which has a plurality of best adj R^2 for all ages, and use that degree for all of them
+   # consistency is key
+  #}
 }
 
 # i'll just use adjusted R^2, since they did, but it's worth raising the possibility of looking at CV error etc.
