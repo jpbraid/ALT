@@ -14,4 +14,4 @@ points(fit_SS$x, fit_SS$y, col = "orange", lwd = 2, type = "l")
 #plot(fit_SS$x, fit_SS$y, col = "orange", type = "l")
 
 df <- data.frame(age = fit_SS$x, MI_SS = fit_SS$y)
-write.csv(df, sprintf("MI_SS_%s_%s.csv", gender, range), row.names = F)
+write.csv(df, sprintf("output/MI_SS_%s_%s.csv", gender, range), row.names = F)
