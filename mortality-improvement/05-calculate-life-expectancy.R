@@ -1,7 +1,7 @@
 ### NOTE: the functions below assume that qx_data and MI_data exist in the global environment
 
-max_analysis_year <- 2100
 current_year <- 2016
+max_analysis_year <- 2100
 # scenarios <- c()
 
 qx_data <- read_csv("qx_all.csv") %>% select(-age)
@@ -21,6 +21,7 @@ forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   }
   max_age <- length(qx_current)/2 - 1
   
+  # build up projected qx's
   qx_projected <- matrix(nrow = max_age + 1, ncol = to_year - from_year + 1)
   qx_projected[, 1] <- qx_current
   for (year in (current_year + 1):to_year) {
@@ -37,6 +38,7 @@ qx_projections_25 <- ## project up to max_analysis_year + max_age using MI_25 fa
 qx_projections_125 <- ## as above using the MI_125 factors
 qx_projections <- # just rbind these two
 # if we had more than two scenarios, do a for loop
+# oh i guess need to cbind each one with the past qx_data (since qx_projections are just the projected data (+ current year data))
   
 get_ex <- function(age, gender, year, scenario = c(25, 125), assumption = c("period", "cohort")) {
     if (assumption == "period") {
