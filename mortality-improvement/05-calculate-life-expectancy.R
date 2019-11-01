@@ -7,7 +7,7 @@ MI_data <- read_csv("MI_all.csv")
 max_age <- nrow(qx_data)/2
 
 forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
-	MI_factors <- MI_data %>% filter(range == scenario, year == from_year) %>% select(MI) %>% unlist() # filter gender?
+    MI_factors <- MI_data %>% filter(range == scenario, year == from_year) %>% select(MI) %>% unlist() # filter gender?
 	qx <- qx_data %>% select(as.character(from_year)) %>% unlist()
 	
 	# make sure MI and qx are the same length or whatever
