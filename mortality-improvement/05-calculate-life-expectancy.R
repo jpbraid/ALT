@@ -6,7 +6,7 @@ current_year <- 2016
 
 qx_data <- read_csv("qx_all.csv") %>% select(-age)
 MI_data <- read_csv("MI_all.csv")
-max_age <- nrow(qx_data)/2
+max_age <- nrow(qx_data)/2 - 1  # divide by 2 since M and F are stacked on top of each other... also assumes each are same length!
 
 forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   MI_factors <- MI_data %>% filter(range == scenario, year == from_year) %>% select(MI) %>% unlist() # filter gender?
@@ -19,7 +19,7 @@ forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   } else {
     qx_current <- qx_current[1:length(MI_factors)]
   }
-  max_age <- length(qx_current) - 1
+  max_age <- length(qx_current)/2 - 1
   
   qx_projected <- matrix(nrow = max_age + 1, ncol = to_year - from_year + 1)
   qx_projected[, 1] <- qx_current
