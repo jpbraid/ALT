@@ -3,6 +3,7 @@
 max_analysis_year <- 2100
 current_year <- 2016
 # scenarios <- c()
+
 qx_data <- read_csv("qx_all.csv") %>% select(-age)
 MI_data <- read_csv("MI_all.csv")
 max_age <- nrow(qx_data)/2
