@@ -7,6 +7,7 @@ max_analysis_year <- 2100
 qx_data <- read_csv("qx_all.csv") %>% select(-age)
 MI_data <- read_csv("MI_all.csv")
 max_age <- nrow(qx_data)/2 - 1  # divide by 2 since M and F are stacked on top of each other... also assumes each are same length!
+# Ohhhhhhhhh! that reminds me i need to do that thing where i extrapolate qx's for old ages and years < 1996!!!
 
 forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   MI_factors <- MI_data %>% filter(range == scenario, year == from_year) %>% select(MI) %>% unlist() # filter gender?
