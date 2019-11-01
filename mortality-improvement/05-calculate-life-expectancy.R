@@ -100,7 +100,6 @@ for(gender in (c("M", "F"))) {
           for (assumption in c("cohort", "period")) {
             if (assumption == "cohort") {
               ex <- cohort_ex(gender = gender, current_age = age, current_year = current_year, start_year = year, scenario = scenario)
-
             } else {
               ex <- period_ex(gender = gender, current_age = age, current_year = current_year, period_year = year, scenario = scenario)
             }
