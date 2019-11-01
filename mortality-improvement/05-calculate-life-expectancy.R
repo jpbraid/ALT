@@ -45,7 +45,7 @@ get_ex <- function(age, gender, year, scenario = c(25, 125), assumption = c("per
 		return(ex)
 	} else {
 		print("not ready to handle cohort just yet")
-    # basically we just need to extract the relevant 
+    		# basically we just need to extract the relevant submatrix from qx_projections and take the diagonal of that
 	}
 }
 
@@ -55,6 +55,7 @@ age <- 65
 analysis_year <- 2060
 improvement_range <- 125
 
-# or for larger loops set up vectors of params
-analysis_years <- c(2016, seq(from = 2020, to = 2060, by = 10))
+# or for larger loops set up vectors of params (we loop over gender and improvement_range in this case so no need to specify those)
 analysis_ages <- c(0, 30, 65)
+analysis_years <- c(2016, seq(from = 2020, to = 2060, by = 10))
+
