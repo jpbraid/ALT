@@ -12,12 +12,12 @@ forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
 	
 	# make sure MI and qx are the same length or whatever
 	# max_age <- blah
-  if (length(qx_current) > length(MI_factors)) {
-    MI_factors <- c(MI_factors, rep(0, length(qx_current) - length(MI_factors)))
-  } else {
-    qx_current <- qx_current[1:length(MI_factors)]
-  }
-  max_age <- length(qx_current) - 1
+	if (length(qx_current) > length(MI_factors)) {
+    	MI_factors <- c(MI_factors, rep(0, length(qx_current) - length(MI_factors)))
+  	} else {
+    	qx_current <- qx_current[1:length(MI_factors)]
+  	}
+  	max_age <- length(qx_current) - 1
 	
 	qx_projected <- matrix(nrow = max_age + 1, ncol = to_year - from_year + 1)
 	qx_projected[, 1] <- qx_current
@@ -45,7 +45,7 @@ get_ex <- function(age, gender, year, scenario = c(25, 125), assumption = c("per
 		return(ex)
 	} else {
 		print("not ready to handle cohort just yet")
-    		# basically we just need to extract the relevant submatrix from qx_projections and take the diagonal of that
+    	# basically we just need to extract the relevant submatrix from qx_projections and take the diagonal of that
 	}
 }
 
