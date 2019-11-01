@@ -25,7 +25,7 @@ forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   # build up projected qx's
   qx_projected <- matrix(nrow = max_age + 1, ncol = to_year - from_year + 1)
   qx_projected[, 1] <- qx_current
-  for (year in (current_year + 1):to_year) {
+  for (year in (from_year + 1):to_year) {
     index <- year - from_year + 1
     qx_projected[, index] <- qx_projected[, 1]*(1 + MI_factors)^(index - 1)
   }
