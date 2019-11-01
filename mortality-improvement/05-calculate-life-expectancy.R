@@ -34,10 +34,11 @@ forecast_qx <- function(from_year, to_year, scenario = c(25, 125)) {
   return(qx_projected)
 }
 
-qx_projections_25 <- ## project up to max_analysis_year + max_age using MI_25 factors
-qx_projections_125 <- ## as above using the MI_125 factors
-qx_projections <- # just rbind these two
-# if we had more than two scenarios, do a for loop
+## project up to max_analysis_year + max_age using each set of MI factors
+# if we had more than two scenarios, do a for loop.. yeah probably best to loop over scenarios
+qx_projections_25 <- forecast_qx(from_year = current_year, to_year = max_analysis_year + max_age, scenario = 25) 
+qx_projections_125 <- forecast_qx(from_year = current_year, to_year = max_analysis_year + max_age, scenario = 125) 
+qx_projections <- rbind(qx_projections_25, qx_projections_125)
 # oh i guess need to cbind each one with the past qx_data (since qx_projections are just the projected data (+ current year data))
   
 get_ex <- function(age, gender, year, scenario = c(25, 125), assumption = c("period", "cohort")) {
