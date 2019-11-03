@@ -176,3 +176,8 @@ get_kbar_qx(age = 65, gender = "M", year = 2016, scenario = 25, assumption = "co
 ## actual qx's from 2011 to 2016, and then use the 2016 MI factors to project qx's from there?? the latter seems to make more sense
 ## other thing is i've tried to do this idea where you can grab multiple ex's at once by passing the function a list of years
 ## but i don't think this works yet
+
+## PLAN: paste the MI_factors (2016+2011) together into a single long dataframe
+## run all the above (maybe write the qx_projections to csv)
+## then change MI_year to 2011 in the qx_projections, and calculate kbarqx there
+## then you're done
