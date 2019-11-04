@@ -1,4 +1,6 @@
-### NOTE: the functions below assume that qx_data and MI_data exist in the global environment
+### NOTE: the functions forecast_qx() assumes that qx_data and MI_data exist in the global environment
+### also, the get_ex() function assumes that a qx_projections data set exists in the global environment
+### obviously, this is not really ideal
 library(tidyverse)
 
 current_year <- 2016 # we start the projections from this year
