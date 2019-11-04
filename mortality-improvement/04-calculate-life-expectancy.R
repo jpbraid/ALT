@@ -7,7 +7,7 @@ scenarios <- c(short = 25, long = 125)
 
 qx_data <- read_csv("qx_all.csv") # qx_all_interpolated
 MI_data <- read_csv("MI_all.csv")
-max_age <- max(qx_data$age) # the maximum possible age i could consider; this well tell me how far out to project beyond the max_analysis_year
+max_age <- max(qx_data$age) # the maximum possible age i could consider
 
 forecast_qx <- function(gender, from_year, to_year, MI_year, scenario = c(25, 125)) {
   MI_factors <- MI_data %>% filter(gender == UQ(gender), range == scenario, year == MI_year) %>% select(MI) %>% unlist()
